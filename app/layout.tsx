@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "bkmrks",
-  description: "A app for bookmarking",
+  description: "An app for bookmarking",
   generator: "Next.js",
   manifest: "/manifest.json",
   keywords: ["bookmarks"],
