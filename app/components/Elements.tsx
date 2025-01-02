@@ -21,10 +21,7 @@ export function StickyNote({
   containerRef: HTMLDivElement;
 }) {
   return (
-    <DraggableItem
-      containerRef={containerRef}
-      position={item.position}
-    >
+    <DraggableItem containerRef={containerRef} position={item.position}>
       <div
         className="p-3 rounded-lg text-sm text-white shadow-lg"
         style={{
@@ -63,7 +60,13 @@ export function ImageCard({
           boxShadow: `0 0 16px 4px ${item.color}66`,
         }}
       >
-        <Image src={item.src as string} alt={item.alt as string} className="w-48 h-48 object-cover" />
+        <Image
+          src={item.src || ""}
+          alt="Image"
+          width={192}
+          height={192}
+          className="w-48 h-48 object-cover"
+        />
       </div>
     </DraggableItem>
   );
@@ -137,6 +140,8 @@ export function LinkCard({
         <Image
           src={item.image as string}
           draggable={false}
+          width={32}
+          height={32}
           alt={`${item.title} thumbnail`}
           className="w-8 h-8 rounded-sm"
         />

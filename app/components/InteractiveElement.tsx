@@ -27,6 +27,7 @@ export function InteractiveElements({
       src?: string;
       name?: string;
       alt?: string;
+      bgColor?: string;
     }[]
   >([]);
 
@@ -65,7 +66,6 @@ export function InteractiveElements({
       {
         type: "image",
         src: "https://picsum.photos/300",
-        alt: "Inspiration Image",
         position: getValidPosition(),
         color: getRandomColor(),
       },
