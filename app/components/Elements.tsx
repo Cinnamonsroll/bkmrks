@@ -63,6 +63,7 @@ export function ImageCard({
         <Image
           src={item.src || ""}
           alt="Image"
+          draggable={false}
           width={192}
           height={192}
           className="w-48 h-48 object-cover"
