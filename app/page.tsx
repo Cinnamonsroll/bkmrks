@@ -41,10 +41,12 @@ export default function Home() {
           you and your saved stuff.
         </Section>
       </main>
-      <InteractiveElements
-        containerRef={containerRef as React.RefObject<HTMLDivElement>}
-        contentRef={contentRef as React.RefObject<HTMLDivElement>}
-      />
+      <div className="w-full h-full hidden md:flex">
+        <InteractiveElements
+          containerRef={containerRef as React.RefObject<HTMLDivElement>}
+          contentRef={contentRef as React.RefObject<HTMLDivElement>}
+        />
+      </div>
     </div>
   );
 }
