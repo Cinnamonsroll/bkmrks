@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Header from "@/app/components/Header";
 import Section from "@/app/components/Section";
 import { InteractiveElements } from "@/app/components/InteractiveElement";
@@ -8,6 +8,19 @@ import Link from "next/link";
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.matchMedia("(min-width: 768px)").matches);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div
@@ -41,12 +54,14 @@ export default function Home() {
           you and your saved stuff.
         </Section>
       </main>
-      <div className="w-full h-full hidden md:flex">
-        <InteractiveElements
-          containerRef={containerRef as React.RefObject<HTMLDivElement>}
-          contentRef={contentRef as React.RefObject<HTMLDivElement>}
-        />
-      </div>
+      {isDesktop && (
+        <div className="w-full h-full hidden md:flex">
+          <InteractiveElements
+            containerRef={containerRef as React.RefObject<HTMLDivElement>}
+            contentRef={contentRef as React.RefObject<HTMLDivElement>}
+          />
+        </div>
+      )}
     </div>
   );
 }
