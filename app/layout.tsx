@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   keywords: ["bookmarks"],
   icons: [
-    { rel: "apple-touch-icon", url: "/icons/bookmark.png" },
-    { rel: "icon", url: "/icons/bookmark.png" },
+    { rel: "apple-touch-icon", url: "icon.png" },
+    { rel: "icon", url: "icon.png" },
   ],
 };
 
