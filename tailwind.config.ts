@@ -9,8 +9,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        woodsmoke: {
+          "50": "#7e7e7e",
+          "100": "#707070",
+          "200": "#505050",
+          "300": "#3e3e3e",
+          "400": "#343434",
+          "500": "#2e2e2e",
+          "600": "#282828",
+          "700": "#232323",
+          "800": "#1c1c1c",
+          "900": "#161616",
+        },
       },
     },
   },
