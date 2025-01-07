@@ -8,6 +8,7 @@ export async function register(formData: FormData) {
     username: formData.get("username") as string,
     password: formData.get("password") as string,
   };
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
@@ -19,7 +20,6 @@ export async function register(formData: FormData) {
     redirect(`/register?error=${error}`);
   }
   const userId = data.user?.id;
-
   const { error: collectionError } = await supabase.from("collections").insert([
     {
       user_id: userId,
@@ -27,8 +27,10 @@ export async function register(formData: FormData) {
       slug: "bookmarks",
     },
   ]);
+
   if (collectionError) {
-    redirect(`/register?error=${collectionError}`);
+    console.log(collectionError)
+    redirect(`/register?error=${collectionError.message}`);
   }
 
   redirect(`/${username}/bookmarks`)

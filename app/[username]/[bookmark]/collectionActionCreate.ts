@@ -11,16 +11,25 @@ export async function collectionCreate(formData: FormData) {
   if (error || !data?.user) {
     redirect("/login");
   }
-  const { error: collectionError } = await supabase
+
+  const { data: collectionData } = await supabase
     .from("collections")
-    .upsert([
-      {
-        user_id: data.user.id,
-        name: form_data.groupName,
-        slug: form_data.groupSlug,
-        created_at: new Date().toISOString(),
-      },
-    ]);
+    .select("*")
+    .eq("user_id", data.user.id)
+    .eq("slug", form_data.groupSlug);
+    
+    if(collectionData){
+      return
+    }
+
+  const { error: collectionError } = await supabase.from("collections").upsert([
+    {
+      user_id: data.user.id,
+      name: form_data.groupName,
+      slug: form_data.groupSlug,
+      created_at: new Date().toISOString(),
+    },
+  ]);
 
   if (collectionError) {
     console.error(collectionError);

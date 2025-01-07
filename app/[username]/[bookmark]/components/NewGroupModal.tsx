@@ -42,7 +42,10 @@ export default function NewGroupModal() {
 
 
   return (
-    <Modal>
+    <Modal onOpenChange={() => setData({
+      name: "",
+      slug: ""
+  })}>
       <Modal.Trigger>
         <div className="flex items-center cursor-pointer">
           <svg

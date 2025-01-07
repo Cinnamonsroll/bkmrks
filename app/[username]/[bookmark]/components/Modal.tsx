@@ -20,16 +20,33 @@ export const ModalContext = createContext<ModalContextProps | undefined>(
   undefined
 );
 
-const Modal: React.FC<{ children: React.ReactNode }> & {
+interface ModalProps {
+  children: React.ReactNode;
+  isControlled?: boolean;
+  isOpen?: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
+}
+
+const Modal: React.FC<ModalProps> & {
   Trigger: React.FC<{ children: React.ReactNode }>;
   Content: React.FC<{ children: React.ReactNode; onClose: () => void }>;
   Header: React.FC<{ children: React.ReactNode }>;
   Footer: React.FC<{ children: React.ReactNode }>;
   CloseButton: React.FC<{ className?: string; children: React.ReactNode }>;
   Close: () => void;
-} = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen((prev) => !prev);
+} = ({ children, isControlled = false, isOpen: externalIsOpen = false, onOpenChange }) => {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  
+  const isOpen = isControlled ? externalIsOpen : internalIsOpen;
+  const setIsOpen = useCallback((value: boolean) => {
+    if (isControlled) {
+      onOpenChange?.(value);
+    } else {
+      setInternalIsOpen(value);
+    }
+  }, [isControlled, onOpenChange]);
+
+  const toggle = useCallback(() => setIsOpen(!isOpen), [isOpen, setIsOpen]);
 
   return (
     <ModalContext.Provider value={{ isOpen, setIsOpen, toggle }}>
@@ -89,9 +106,12 @@ const Content: React.FC<{ children: React.ReactNode; onClose: () => void }> = ({
 
   const { isOpen, setIsOpen } = context;
   const modalRef = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
-    if (!isOpen) onClose();
-  }, [isOpen, onClose]);
+    if (!isOpen) {
+      onClose?.();
+    }
+  }, [isOpen]);
 
   const handleClose = useCallback(() => {
     setIsOpen(false);
