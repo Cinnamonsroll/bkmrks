@@ -18,9 +18,7 @@ export async function collectionCreate(formData: FormData) {
     .eq("user_id", data.user.id)
     .eq("slug", form_data.groupSlug);
     
-    if(collectionData){
-      return
-    }
+    console.log(collectionData)
 
   const { error: collectionError } = await supabase.from("collections").upsert([
     {
