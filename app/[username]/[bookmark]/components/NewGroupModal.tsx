@@ -18,6 +18,7 @@ export default function NewGroupModal() {
     name: "",
     slug: "",
   });
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setData((prev) => ({
@@ -27,6 +28,7 @@ export default function NewGroupModal() {
   }, [data.name]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
     setData((prev) => ({
       ...prev,
       name: e.target.value,
@@ -34,18 +36,31 @@ export default function NewGroupModal() {
   };
 
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
     setData((prev) => ({
       ...prev,
       slug: e.target.value,
     }));
   };
 
+  const handleSubmit = async (formData: FormData) => {
+    try {
+      await collectionCreate(formData);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+    }
+  };
 
-  return (
-    <Modal onOpenChange={() => setData({
+  const handleModalClose = () => {
+    setData({
       name: "",
       slug: ""
-  })}>
+    });
+    setError(null);
+  };
+
+  return (
+    <Modal onOpenChange={handleModalClose}>
       <Modal.Trigger>
         <div className="flex items-center cursor-pointer">
           <svg
@@ -59,13 +74,15 @@ export default function NewGroupModal() {
           New Group
         </div>
       </Modal.Trigger>
-      <form action={collectionCreate}>
-        <Modal.Content onClose={() => setData({
-            name: "",
-            slug: ""
-        })}>
+      <form action={handleSubmit}>
+        <Modal.Content onClose={handleModalClose}>
           <Modal.Header>
             <h2 className="text-white font-semibold">Create New Group</h2>
+            {error && (
+              <div className="mt-2 text-sm text-red-500">
+                {error}
+              </div>
+            )}
           </Modal.Header>
           <div className="p-4 flex items-center justify-center flex-col w-full gap-3">
             <label className="inline-block w-full">
@@ -104,7 +121,6 @@ export default function NewGroupModal() {
               </Modal.CloseButton>
               <button
                 type="submit"
-                onSubmit={() => Modal.Close()}
                 disabled={!data.name || !data.slug}
                 className="rounded-md bg-woodsmoke-800 w-full h-10 text-white hover:bg-woodsmoke-900 transition-all font-semibold disabled:cursor-not-allowed"
               >
