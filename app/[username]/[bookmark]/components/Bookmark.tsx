@@ -128,7 +128,7 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
                         <div className="flex flex-col gap-1">
                           <span
                             className="text-white text-sm font-medium overflow-hidden text-ellipsis whitespace-nowrap max-w-xs"
-                            title={bm.name} // Optional: Adds full name as a tooltip
+                            title={bm.name}
                           >
                             {bm.name}
                           </span>
@@ -138,7 +138,7 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-blue-400 text-xs hover:underline overflow-hidden text-ellipsis whitespace-nowrap max-w-xs"
-                              title={bm.content} // Optional: Adds full link as a tooltip
+                              title={bm.content}
                             >
                               {bm.content}
                             </a>
