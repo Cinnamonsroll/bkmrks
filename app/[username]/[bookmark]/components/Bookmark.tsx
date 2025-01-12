@@ -125,8 +125,11 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
                             generateIcon(contentType, bm.content)
                           )}
                         </span>
-                        <div className="flex flex-row gap-1 items-end">
-                          <span className="text-white text-sm font-medium">
+                        <div className="flex flex-col gap-1">
+                          <span
+                            className="text-white text-sm font-medium overflow-hidden text-ellipsis whitespace-nowrap max-w-xs"
+                            title={bm.name} // Optional: Adds full name as a tooltip
+                          >
                             {bm.name}
                           </span>
                           {contentType.type === "link" && (
@@ -134,14 +137,15 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
                               href={bm.content}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-400 text-xs hover:underline"
+                              className="text-blue-400 text-xs hover:underline overflow-hidden text-ellipsis whitespace-nowrap max-w-xs"
+                              title={bm.content} // Optional: Adds full link as a tooltip
                             >
                               {bm.content}
                             </a>
                           )}
                         </div>
                       </div>
-                      <span className="text-woodsmoke-100 text-xs">
+                      <span className="text-woodsmoke-100 text-xs overflow-hidden text-ellipsis whitespace-nowrap max-w-[100px]">
                         {bm.created_at}
                       </span>
                     </>
