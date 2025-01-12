@@ -60,9 +60,6 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
           id: selectedBookmark.id,
           name: bookmarkName,
         });
-        bookmarks = bookmarks.map((bm) =>
-          bm.id === selectedBookmark.id ? { ...bm, name: bookmarkName } : bm
-        );
         handleModalClose();
       } catch (err) {
         console.error("Failed to update bookmark:", err);
