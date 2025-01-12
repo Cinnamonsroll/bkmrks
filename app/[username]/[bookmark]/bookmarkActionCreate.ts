@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 interface BookmarkCreateData {
   collection_id: string;
+  user_id: string;
   content: string;
   created_at: string;
 }
@@ -22,6 +23,7 @@ export async function bookmarkCreate(bookmarkCreateData: BookmarkCreateData) {
         name: bookmarkCreateData.content,
         content: bookmarkCreateData.content,
         created_at: bookmarkCreateData.created_at,
+        user_id: bookmarkCreateData.user_id
       },
     ]);
   if (bookmarkError) {

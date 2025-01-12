@@ -4,10 +4,12 @@ import { generateIcon } from "@/app/[username]/[bookmark]/components/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Modal from "./Modal";
+import { bookmarkUpdate } from "../bookmarkActionUpdate";
 
 export interface Bookmark {
   collection_id: string;
   id: string;
+  user_id: string;
   name: string;
   content: string;
   created_at: string;
@@ -20,6 +22,7 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
     null
   );
   const [showModal, setShowModal] = useState(false);
+  const [bookmarkName, setBookmarkName] = useState("");
 
   const handleCopy = (content: string, id: string) => {
     navigator.clipboard.writeText(content).then(() => {
@@ -31,6 +34,7 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
   const handleTouchStart = (bookmark: Bookmark) => {
     const timeout = setTimeout(() => {
       setSelectedBookmark(bookmark);
+      setBookmarkName(bookmark.name);
       setShowModal(true);
     }, 500);
     setTouchTimeout(timeout);
@@ -46,6 +50,24 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
   const handleModalClose = () => {
     setShowModal(false);
     setSelectedBookmark(null);
+    setBookmarkName("");
+  };
+
+  const handleSave = async () => {
+    if (selectedBookmark) {
+      try {
+        await bookmarkUpdate({
+          id: selectedBookmark.id,
+          name: bookmarkName,
+        });
+        bookmarks = bookmarks.map((bm) =>
+          bm.id === selectedBookmark.id ? { ...bm, name: bookmarkName } : bm
+        );
+        handleModalClose();
+      } catch (err) {
+        console.error("Failed to update bookmark:", err);
+      }
+    }
   };
 
   bookmarks = bookmarks.map((bm) => ({
@@ -161,15 +183,45 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
         <Modal isControlled isOpen={showModal} onOpenChange={handleModalClose}>
           <Modal.Content onClose={handleModalClose}>
             <Modal.Header>
-              <h2 className="text-white font-semibold">
-                {selectedBookmark.name}
-              </h2>
+              <div className="flex items-center gap-2">
+                <span className="size-6 flex justify-center items-center text-white">
+                  {generateIcon(
+                    detectContentType(selectedBookmark.content),
+                    selectedBookmark.content
+                  )}
+                </span>
+                <h2
+                  className="text-white font-semibold overflow-hidden text-ellipsis whitespace-nowrap max-w-xs"
+                  title={selectedBookmark.name}
+                >
+                  {selectedBookmark.name}
+                </h2>
+              </div>
             </Modal.Header>
             <div className="p-4 flex items-center justify-center flex-col w-full gap-3">
-              <p className="text-woodsmoke-50">{selectedBookmark.content}</p>
-              <p className="text-woodsmoke-100 text-sm">
-                Created: {selectedBookmark.created_at}
-              </p>
+              <label className="inline-block w-full">
+                <span className="text-woodsmoke-50 mb-2 block text-sm">
+                  Name
+                </span>
+                <div className="relative flex items-center">
+                  <input
+                    value={bookmarkName}
+                    onChange={(e) => setBookmarkName(e.target.value)}
+                    type="text"
+                    className="h-10 text-sm rounded-md p-2 w-full bg-woodsmoke-900 transition-all block border border-woodsmoke-400 text-white placeholder:text-woodsmoke-100 shadow-[0_1px_2px_0_rgba(0,0,0,0.06)] focus:shadow-[0_0_0_2px_#707070,0_0_0_4px_#505050] disabled:cursor-not-allowed"
+                    required
+                    name="bookmarkName"
+                  />
+                  <button
+                    onClick={handleSave}
+                    type="button"
+                    disabled={!bookmarkName.trim()}
+                    className="ml-2 h-10 px-4 rounded-md bg-woodsmoke-800 text-white hover:bg-woodsmoke-900 transition-all font-semibold disabled:cursor-not-allowed"
+                  >
+                    Save
+                  </button>
+                </div>
+              </label>
             </div>
             <Modal.Footer>
               <div className="w-full flex items-center justify-end gap-4">

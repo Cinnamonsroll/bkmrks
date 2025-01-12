@@ -25,18 +25,19 @@ export default async function BookmarkApp({
     .select("*")
     .eq("user_id", data.user.id)
     .order("created_at", { ascending: true });
+  
   const currentCollection = collectionData?.find(
     (cb: Collection) => cb.slug === bookmark
   );
-  if (collectionData && !currentCollection)
+  if (collectionData && !currentCollection) {
     return redirect(`/${username}/${collectionData[0].slug}`);
+  }
 
- const { data: bookmarkData } = await supabase
+  const { data: bookmarkData } = await supabase
     .from("bookmarks")
     .select("*")
     .eq("collection_id", currentCollection.id)
     .order("created_at", { ascending: true });
-
 
   return (
     <BookmarkPage
