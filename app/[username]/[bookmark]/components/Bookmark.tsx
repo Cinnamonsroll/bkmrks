@@ -3,8 +3,9 @@ import { detectContentType } from "@/app/utils/lib";
 import { generateIcon } from "@/app/[username]/[bookmark]/components/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Modal from "./Modal";
-import { bookmarkUpdate } from "../bookmarkActionUpdate";
+import { bookmarkUpdate } from "@/app/[username]/[bookmark]/bookmarkActionUpdate";
+import { bookmarkDelete } from "@/app/[username]/[bookmark]/bookmarkActionDelete";
+import Modal from "@/app/[username]/[bookmark]/components/Modal";
 
 export interface Bookmark {
   collection_id: string;
@@ -23,6 +24,7 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
   );
   const [showModal, setShowModal] = useState(false);
   const [bookmarkName, setBookmarkName] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
 
   const handleCopy = (content: string, id: string) => {
     navigator.clipboard.writeText(content).then(() => {
@@ -51,6 +53,7 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
     setShowModal(false);
     setSelectedBookmark(null);
     setBookmarkName("");
+    setDeleteConfirm(false);
   };
 
   const handleSave = async () => {
@@ -63,6 +66,19 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
         handleModalClose();
       } catch (err) {
         console.error("Failed to update bookmark:", err);
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    if (selectedBookmark) {
+      try {
+        await bookmarkDelete({
+          id: selectedBookmark.id
+        });
+        handleModalClose();
+      } catch (err) {
+        console.error("Failed to delete bookmark:", err);
       }
     }
   };
@@ -219,6 +235,34 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
                   </button>
                 </div>
               </label>
+              {!deleteConfirm ? (
+                <button
+                  onClick={() => setDeleteConfirm(true)}
+                  className="mt-4 h-10 px-4 w-full rounded-md bg-red-600 text-white hover:bg-red-700 transition-all font-semibold"
+                >
+                  Delete
+                </button>
+              ) : (
+                <div className="w-full flex flex-col items-center gap-2">
+                  <span className="text-red-500 text-sm">
+                    Are you sure you want to delete this bookmark?
+                  </span>
+                  <div className="flex gap-2 w-full">
+                    <button
+                      onClick={handleDelete}
+                      className="h-10 px-4 w-full rounded-md bg-red-600 text-white hover:bg-red-700 transition-all font-semibold"
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      onClick={() => setDeleteConfirm(false)}
+                      className="h-10 px-4 w-full rounded-md bg-woodsmoke-800 text-white hover:bg-woodsmoke-900 transition-all font-semibold"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
             <Modal.Footer>
               <div className="w-full flex items-center justify-end gap-4">
