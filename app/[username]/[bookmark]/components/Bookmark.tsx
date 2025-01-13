@@ -74,7 +74,7 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
     if (selectedBookmark) {
       try {
         await bookmarkDelete({
-          id: selectedBookmark.id
+          id: selectedBookmark.id,
         });
         handleModalClose();
       } catch (err) {
@@ -115,6 +115,12 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
                   key={bm.id}
                   onClick={() => handleCopy(bm.content, bm.id)}
                   onTouchStart={() => handleTouchStart(bm)}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    setSelectedBookmark(bm);
+                    setBookmarkName(bm.name);
+                    setShowModal(true);
+                  }}
                   onTouchEnd={handleTouchEnd}
                   onTouchCancel={handleTouchEnd}
                   className="flex justify-between items-center gap-3 p-2 border border-woodsmoke-400 rounded-md hover:bg-woodsmoke-500 transition cursor-pointer"
@@ -266,7 +272,7 @@ export function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
             </div>
             <Modal.Footer>
               <div className="w-full flex items-center justify-end gap-4">
-                <Modal.CloseButton className="rounded-md bg-woodsmoke-700 hover:bg-woodsmoke-800 w-full h-10 text-white transition-all font-semibold disabled:cursor-not-allowed">
+                <Modal.CloseButton className="rounded-md bg-woodsmoke-800 hover:bg-woodsmoke-800 w-full h-10 text-white transition-all font-semibold disabled:cursor-not-allowed">
                   Close
                 </Modal.CloseButton>
               </div>

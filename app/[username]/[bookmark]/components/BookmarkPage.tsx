@@ -56,6 +56,7 @@ export function BookmarkPage({
           filter: `collection_id=eq.${currentCollection.id}`,
         },
         (payload) => {
+
           if (payload.eventType === "INSERT") {
             setUbookmarks((prev) => [...prev, payload.new as Bookmark]);
           } else if (payload.eventType === "UPDATE") {
@@ -74,11 +75,12 @@ export function BookmarkPage({
         }
       )
       .subscribe();
-
+  
     return () => {
       supabase.removeChannel(channel);
     };
   }, [supabase, currentCollection]);
+  
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
